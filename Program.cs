@@ -6,7 +6,7 @@ var app = builder.Build();
 
 app.MapGet("/", () => Results.Content("""
     <html>
-      <body style="background-color: blue;">
+      <body style="background-color: green;">
         <h1>Hello World!</h1>
       </body>
     </html>
