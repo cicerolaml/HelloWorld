@@ -1,0 +1,28 @@
+name: Deploy Hello World (Windows local)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish
+        run: dotnet publish -c Release -o C:\Apps\HelloWorldApp_new
+
+      - name: Parar servico
+        run: sc.exe stop HelloWorldApp
+        continue-on-error: true
+
+      - name: Substituir arquivos
+        shell: powershell
+        run: |
+          Start-Sleep -Seconds 2
+          Remove-Item -Path "C:\Apps\HelloWorldApp\*" -Recurse -Force
+          Copy-Item -Path "C:\Apps\HelloWorldApp_new\*" -Destination "C:\Apps\HelloWorldApp" -Recurse -Force
+
+      - name: Iniciar servico
+        run: sc.exe start HelloWorldApp
